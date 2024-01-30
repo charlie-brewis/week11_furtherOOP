@@ -1,6 +1,9 @@
 
 
 
+from typing import Any
+
+
 class Song:
 
     def __init__(self, name: str, artist: str, song_length: int):
@@ -29,24 +32,52 @@ class Playlist:
         else:
             print("Song not in playlist.")
 
+    def get_name(self):
+        return self.name
 
 
-def intialise_songs() -> list[Song]:
-    songs = []
-    songs.append(Song("Cut - 1990 Demo", "The Cure", 213))
-    songs.append(Song("Grace", "Jeff Buckley", 322))
-    songs.append(Song("It's Oh So Quiet", "Bjork", 218))
-    songs.append(Song("Sour Times", "Portishead", 252))
-    songs.append(Song("Beetlebum - 2012 Remaster", "Blur", 305))
-    return songs
 
-def intialise_playlists(all_songs: list[Song]) -> list[Playlist]:
-    playlists = []
-    playlists.append(Playlist("Alternative 90s", all_songs[:4]))
-    return playlists
+class Spotify:
+    
+    def __init__(self):
+        self.all_songs = self.intialise_songs()
+        self.all_playlists = self.intialise_playlists()
+
+    def intialise_songs(self) -> list[Song]:
+        songs = []
+        songs.append(Song("Cut - 1990 Demo", "The Cure", 213))
+        songs.append(Song("Grace", "Jeff Buckley", 322))
+        songs.append(Song("It's Oh So Quiet", "Bjork", 218))
+        songs.append(Song("Sour Times", "Portishead", 252))
+        songs.append(Song("Beetlebum - 2012 Remaster", "Blur", 305))
+        songs.append(Song("Infinite", "Eminem", 252))
+        songs.append(Song("Doomsday", "MF DOOM", 298))
+        songs.append(Song("C.R.E.A.M.", "Wu-tang Clan", 252))
+        return songs
+
+    def intialise_playlists(self) -> list[Playlist]:
+        playlists = []
+        playlists.append(Playlist("Alternative 90s", self.all_songs[:4]))
+        playlists.append(Playlist("Rap", self.all_songs[5:]))
+        return playlists
+    
+    def display_playlists(self):
+        for playlist in self.all_playlists:
+            print("   " + playlist.get_name())
+
 
 def main():
-    all_songs = intialise_songs()
-    all_playlists = intialise_playlists(all_songs)
-    while True:
-        pass
+    # while True:
+    #     playlist_name = input("Select a playlist:\n")
+    app = Spotify()
+    print("Select a playlist:")
+    app.display_playlists()
+
+    '''
+    1) Select playlist + view
+    2) add song or select song
+    3) view 
+    4) can remove
+    '''
+
+main()
