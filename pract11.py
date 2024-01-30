@@ -7,10 +7,17 @@ class Laptop:
         32: 200
     }
 
+    ssdOptions = {
+        256: 0,
+        512: 30,
+        1024: 100
+    }
+
     def __init__(self, brand, basePrice):
         self.brand = brand
         self.basePrice = basePrice
         self.ram = 4
+        self.ssd = 256
 
     def getBrand(self):
         return self.brand
@@ -20,14 +27,22 @@ class Laptop:
 
     def getPrice(self):
         ramPrice = self.ramOptions[self.ram]
-        return self.basePrice + ramPrice
+        ssdPrice = self.ssdOptions[self.ssd]
+        return self.basePrice + ramPrice + ssdPrice
 
     def setRam(self, ram):
         if ram in self.ramOptions:
             self.ram = ram
+    
+    def getSsd(self):
+        return self.ssd 
+    
+    def setSsd(self, ssd):
+        if ssd in self.ssdOptions:
+            self.ssd = ssd
 
     def __str__(self):
-        output = f"{self.brand} Laptop with {self.ram} GB RAM "
+        output = f"{self.brand} Laptop with {self.ram} GB RAM and {self.ssd} GB SSD"
         output += f"priced at £{self.getPrice()}"
         return output
 
@@ -90,12 +105,16 @@ def testLaptop():
     laptop = Laptop("Dell", 999.99)
     print("laptop's brand is", laptop.getBrand())
     print("laptop's RAM is", laptop.getRam())
+    print("laptop's SSD is", laptop.getSsd())
     print("laptop's price is", laptop.getPrice())  # 999.99
 
     laptop.setRam(32)
     print("laptop's RAM is now", laptop.getRam())
     laptop.setRam(30)
     print("laptop's RAM is still", laptop.getRam())
+
+    laptop.setSsd(1024)
+    print("laptop's SSD is now", laptop.getSsd())
 
     print("laptop's price is now", laptop.getPrice())  # 999.99 + 200 = 1199.99
 
@@ -133,3 +152,6 @@ def testGamingLaptop():
     print("Gaming laptop's price is now", gamingLaptop.getPrice())
 
     print(gamingLaptop)
+
+
+testLaptop()
