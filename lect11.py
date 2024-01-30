@@ -48,6 +48,23 @@ class Order:
         for pizza in self.pizzas:
             totalPrice += pizza.getPrice()
         return totalPrice
+    
+    def upgradePizza(self, pizzaIndex: int):
+        print("")
+        if pizzaIndex > len(self.pizzas) - 1:
+            print("Pizza index out of range")
+            return
+        pizzaObj = self.pizzas[pizzaIndex]
+        if isinstance(pizzaObj, StuffedCrustPizza):
+            print("Pizza already upgraded.")
+        else:
+            crust = input("Enter stuffed crust type: ")
+            toppings = pizzaObj.getToppings()
+            size = pizzaObj.getSize()
+            upgradedPizza = StuffedCrustPizza(size, crust)
+            for topping in toppings:
+                upgradedPizza.addTopping(topping)
+            self.pizzas[pizzaIndex] = upgradedPizza
 
     def __str__(self):
         output = "Your order contains:\n"
@@ -78,7 +95,7 @@ class StuffedCrustPizza(Pizza):
         return super().getPrice() + 2
 
     def __str__(self):
-        output = f"A {self.size} stuffed crust pizza with:"
+        output = f"\nA {self.size} stuffed crust pizza with:"
         for topping in self.toppings:
             output += f"\n- {topping}"
         output += f"\nCrust type: {self.crust}"
@@ -101,4 +118,11 @@ def test():
     myOrder.addPizza(pizza1)
     myOrder.addPizza(pizza2)
 
+    myOrder.upgradePizza(3)
     print(myOrder)
+    myOrder.upgradePizza(1)
+    print(myOrder)
+    myOrder.upgradePizza(0)
+    print(myOrder)
+
+test()
