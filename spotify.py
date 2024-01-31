@@ -1,8 +1,4 @@
-
-
-
-from typing import Any
-
+TAB = "    "
 
 class Song:
 
@@ -42,6 +38,8 @@ class Spotify:
     def __init__(self):
         self.all_songs = self.intialise_songs()
         self.all_playlists = self.intialise_playlists()
+        self.selected_playlist = None 
+        self.selected_song = None
 
     def intialise_songs(self) -> list[Song]:
         songs = []
@@ -61,17 +59,27 @@ class Spotify:
         playlists.append(Playlist("Rap", self.all_songs[5:]))
         return playlists
     
-    def display_playlists(self):
+    def display_all_playlists(self):
         for playlist in self.all_playlists:
-            print("   " + playlist.get_name())
+            print(TAB + TAB + playlist.get_name())
+    
+    def select_playlist(self):
+        while True:
+            selected = input('>> ')
+            for playlist in self.all_playlists:
+                if playlist.get_name() == selected:
+                    self.selected_playlist = playlist
+                    return
+            print("Error: Playlist not found in app")
 
 
 def main():
     # while True:
     #     playlist_name = input("Select a playlist:\n")
     app = Spotify()
-    print("Select a playlist:")
-    app.display_playlists()
+    print(TAB + "Select a playlist:")
+    app.display_all_playlists()
+    app.select_playlist()
 
     '''
     1) Select playlist + view
