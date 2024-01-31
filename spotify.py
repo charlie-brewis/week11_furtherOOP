@@ -1,4 +1,4 @@
-TAB = "    "
+TAB = "   "
 
 class Song:
 
@@ -8,6 +8,9 @@ class Song:
         # Measured in seconds
         self.length = song_length
 
+    def __str__(self):
+        return f"'{self.name}'[{self.length // 60}:{self.length % 60}] by {self.artist}"
+
 
 
 class Playlist:
@@ -15,6 +18,11 @@ class Playlist:
     def __init__(self, playlist_name: str, initial_songs: list[Song]):
         self.name = playlist_name
         self.songs = initial_songs
+        self.commands = {
+            "help" : self.command_help,
+            "add" : self.command_add,
+            "select" : self.command_select,
+        }
 
     def add_song(self, song: Song):
         if song not in self.songs:
@@ -29,6 +37,37 @@ class Playlist:
             print("Song not in playlist.")
 
     def get_name(self):
+        return self.name
+    
+    def display(self):
+        print(TAB + self.name)
+        for song in self.songs:
+            print(TAB + TAB + song)
+
+    def enter_command(self):
+        while True:
+            print('\n' + TAB + "Please enter a command (type help for list of commands):")
+            command = input(">> ").split(' ')
+            if command[0] in self.commands:
+                self.commands[command[0]](command)
+            elif command[0] == "back":
+                return
+            else:
+                print("Error: Command not found")
+
+
+    def command_help(self, command: list[str]):
+        print(f"{TAB}Command 1){TAB}add SONG_NAME ARTISTS SONG_LENGTH_IN_SECS")
+        print(f"{TAB}Command 2){TAB}select SONG_NAME")
+        print(f"{TAB}Command 3){TAB}back")
+
+    def command_add(self, command):
+        pass
+
+    def command_select(self, command):
+        pass
+
+    def __str__(self):
         return self.name
 
 
@@ -61,7 +100,7 @@ class Spotify:
     
     def display_all_playlists(self):
         for playlist in self.all_playlists:
-            print(TAB + TAB + playlist.get_name())
+            print(TAB + TAB + str(playlist))
     
     def select_playlist(self):
         while True:
@@ -80,6 +119,7 @@ def main():
     print(TAB + "Select a playlist:")
     app.display_all_playlists()
     app.select_playlist()
+    app.selected_playlist.enter_command()
 
     '''
     1) Select playlist + view
