@@ -6,7 +6,8 @@ class Song:
         self.name = name
         self.artist = artist
         # Measured in seconds
-        self.length = song_length
+        #! No error checking here
+        self.length = int(song_length)
 
     def __str__(self):
         return f"'{self.name}'[{self.length // 60}:{self.length % 60}] by {self.artist}"
@@ -42,12 +43,12 @@ class Playlist:
     def display(self):
         print(TAB + self.name)
         for song in self.songs:
-            print(TAB + TAB + song)
+            print(TAB + TAB + str(song))
 
     def enter_command(self):
         while True:
             print('\n' + TAB + "Please enter a command (type help for list of commands):")
-            command = input(">> ").split(' ')
+            command = input(">> ").split(', ')
             if command[0] in self.commands:
                 self.commands[command[0]](command)
             elif command[0] == "back":
@@ -55,14 +56,17 @@ class Playlist:
             else:
                 print("Error: Command not found")
 
-
     def command_help(self, command: list[str]):
-        print(f"{TAB}Command 1){TAB}add SONG_NAME ARTISTS SONG_LENGTH_IN_SECS")
-        print(f"{TAB}Command 2){TAB}select SONG_NAME")
+        print(f"{TAB}Command 1){TAB}add, SONG_NAME, ARTISTS, SONG_LENGTH_IN_SECS")
+        print(f"{TAB}Command 2){TAB}select, SONG_NAME")
         print(f"{TAB}Command 3){TAB}back")
 
     def command_add(self, command):
-        pass
+        if len(command) == 4:
+            self.add_song(Song(*command[1:]))
+            self.display()
+        else:
+            print("Error: Invalid add command")
 
     def command_select(self, command):
         pass
@@ -119,6 +123,7 @@ def main():
     print(TAB + "Select a playlist:")
     app.display_all_playlists()
     app.select_playlist()
+    app.selected_playlist.display()
     app.selected_playlist.enter_command()
 
     '''
