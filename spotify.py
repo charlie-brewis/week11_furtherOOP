@@ -13,7 +13,7 @@ class Song:
         return self.name
 
     def __str__(self):
-        return f"'{self.name}'[{self.length // 60}:{self.length % 60}] by {self.artist}"
+        return f"'{self.name}'[{self.length // 60}:{self.length % 60 :.2f}] by {self.artist}"
 
 
 
@@ -25,9 +25,8 @@ class Playlist:
         self.commands = {
             "help" : self.command_help,
             "add" : self.command_add,
-            "select" : self.command_select,
+            "remove" : self.command_remove
         }
-        self.selected_song = None
 
     def add_song(self, song: Song):
         if song not in self.songs:
@@ -45,13 +44,9 @@ class Playlist:
         return self.name
     
     def display(self):
-        print(TAB + self.name)
+        print('\n' + TAB + self.name)
         for song in self.songs:
-            print(TAB + TAB, end='')
-            if song.get_name() == self.selected_song:
-                print(f"\033[1m{str(song)}\033[0m")
-            else:
-                print(str(song))
+            print(TAB + TAB + str(song))
 
     def enter_command(self):
         while True:
@@ -67,7 +62,7 @@ class Playlist:
 
     def command_help(self, command: list[str]):
         print(f"{TAB}Command 1){TAB}add, SONG_NAME, ARTISTS, SONG_LENGTH_IN_SECS")
-        print(f"{TAB}Command 2){TAB}select, SONG_NAME")
+        print(f"{TAB}Command 2){TAB}remove, SONG_NAME")
         print(f"{TAB}Command 3){TAB}back")
 
     def command_add(self, command):
@@ -76,16 +71,16 @@ class Playlist:
         else:
             print("Error: Invalid add command")
 
-    def command_select(self, command):
+    def command_remove(self, command):
         if len(command) == 2:
             song_name = command[1]
             for song in self.songs:
                 if song.get_name() == song_name:
-                    self.selected_song = song_name
-                    return
+                    self.songs.remove(song)
+                    return 
             print("Song not found in playlist")
         else:
-            print("Error: Invalid select command")
+            print("Error: Invalid remove command")
 
     def __str__(self):
         return self.name
@@ -139,7 +134,6 @@ def main():
     print(TAB + "Select a playlist:")
     app.display_all_playlists()
     app.select_playlist()
-    app.selected_playlist.display()
     app.selected_playlist.enter_command()
 
     '''
