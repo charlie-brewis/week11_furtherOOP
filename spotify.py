@@ -45,6 +45,9 @@ class Playlist:
     
     def display(self):
         print('\n' + TAB + self.name)
+        if len(self.songs) == 0:
+            print("Playlist is empty! :(")
+            return
         for song in self.songs:
             print(TAB + TAB + str(song))
 
@@ -78,7 +81,7 @@ class Playlist:
                 if song.get_name() == song_name:
                     self.songs.remove(song)
                     return 
-            print("Song not found in playlist")
+            print("Error: Song not found in playlist")
         else:
             print("Error: Invalid remove command")
 
@@ -90,12 +93,16 @@ class Playlist:
 class Spotify:
     
     def __init__(self):
-        self.all_songs = self.intialise_songs()
-        self.all_playlists = self.intialise_playlists()
-        self.selected_playlist = None 
-        self.selected_song = None
+        self.all_songs = self.INTIALISE_SONGS()
+        self.all_playlists = self.INITALISE_PLAYLISTS()
+        self.commands = {
+            "help" : self.command_help,
+            "select" : self.command_select,
+            "remove" : self.command_remove,
+            "new" : self.command_new
+        }
 
-    def intialise_songs(self) -> list[Song]:
+    def INTIALISE_SONGS(self) -> list[Song]:
         songs = []
         songs.append(Song("Cut - 1990 Demo", "The Cure", 213))
         songs.append(Song("Grace", "Jeff Buckley", 322))
@@ -107,7 +114,7 @@ class Spotify:
         songs.append(Song("C.R.E.A.M.", "Wu-tang Clan", 252))
         return songs
 
-    def intialise_playlists(self) -> list[Playlist]:
+    def INITALISE_PLAYLISTS(self) -> list[Playlist]:
         playlists = []
         playlists.append(Playlist("Alternative 90s", self.all_songs[:4]))
         playlists.append(Playlist("Rap", self.all_songs[5:]))
@@ -116,25 +123,74 @@ class Spotify:
     def display_all_playlists(self):
         for playlist in self.all_playlists:
             print(TAB + TAB + str(playlist))
-    
-    def select_playlist(self):
+
+    def enter_command(self):
         while True:
-            selected = input('>> ')
+            self.display_all_playlists()
+            print('\n' + TAB + "Please enter a command (type help for list of commands):")
+            command = input(">> ").split(', ')
+            if command[0] in self.commands:
+                self.commands[command[0]](command)
+            elif command[0] == "quit":
+                return
+            else:
+                print("Error: Command not found")
+    
+    def command_help(self, command):
+        print(f"{TAB}Command 1){TAB}select, PLAYLIST_NAME")
+        print(f"{TAB}Command 2){TAB}remove, PLAYLIST_NAME")
+        print(f"{TAB}Command 3){TAB}new, PLAYLIST_NAME")
+        print(f"{TAB}Command 4){TAB}quit")
+
+    def command_select(self, command):
+        if len(command) == 2:
+            playlist_name = command[1]
             for playlist in self.all_playlists:
-                if playlist.get_name() == selected:
-                    self.selected_playlist = playlist
+                if playlist.get_name() == playlist_name:
+                    playlist.enter_command()
                     return
             print("Error: Playlist not found in app")
+        else:
+            print("Error: Invalid select command")
+
+    def command_remove(self, command):
+        if len(command) == 2:
+            playlist_name = command[1]
+            for playlist in self.all_playlists:
+                if playlist.get_name() == playlist_name:
+                    self.all_playlists.remove(playlist_name)
+                    return
+            print("Error: Playlist not found in app")
+        else:
+            print("Error: Invalid remove command")
+    
+    def command_new(self, command):
+        if len(command) == 2:
+            playlist_name = command[1]
+            new_playlist = Playlist(playlist_name, [])
+            self.all_playlists.append(new_playlist)
+            new_playlist.enter_command()
+        else:
+            print("Error: Invalid new command")
+            
+
+
+
+    def main_loop(self):
+        while True:
+            self.enter_command()
+
 
 
 def main():
     # while True:
     #     playlist_name = input("Select a playlist:\n")
     app = Spotify()
-    print(TAB + "Select a playlist:")
-    app.display_all_playlists()
-    app.select_playlist()
-    app.selected_playlist.enter_command()
+    # print(TAB + "Select a playlist:")
+    # app.display_all_playlists()
+    # app.select_playlist()
+    # app.selected_playlist.enter_command()
+    app.main_loop()
 
     '''
     1) Select playlist + view
