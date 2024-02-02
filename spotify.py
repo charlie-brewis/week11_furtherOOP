@@ -13,8 +13,7 @@ class Song:
         return self.name
 
     def __str__(self):
-        #! Need rjust or something on seconds
-        return f"'{self.name}'[{self.length // 60}:{self.length % 60}] by {self.artist}"
+        return f"'{self.name}'[{self.length // 60}:{self.length % 60 :02}] by {self.artist}"
 
 
 
@@ -71,7 +70,10 @@ class Playlist:
 
     def command_add(self, command):
         if len(command) == 4:
-            self.add_song(Song(*command[1:]))
+            if command[-1].isdigit():
+                self.add_song(Song(*command[1:]))
+            else:
+                print("Error: Invalid song length")
         else:
             print("Error: Invalid add command")
 
@@ -133,7 +135,6 @@ class Spotify:
             command = input(">> ").split(', ')
             if command[0] in self.commands:
                 self.commands[command[0]](command)
-            #! Not working
             elif command[0] == "quit":
                 return
             else:
@@ -180,8 +181,8 @@ class Spotify:
 
 
     def main_loop(self):
-        while True:
-            self.enter_command()
+        # while True:
+        self.enter_command()
 
 
 
