@@ -9,6 +9,9 @@ class Song:
         #! No error checking here
         self.length = int(song_length)
 
+    def get_name(self):
+        return self.name
+
     def __str__(self):
         return f"'{self.name}'[{self.length // 60}:{self.length % 60}] by {self.artist}"
 
@@ -24,6 +27,7 @@ class Playlist:
             "add" : self.command_add,
             "select" : self.command_select,
         }
+        self.selected_song = None
 
     def add_song(self, song: Song):
         if song not in self.songs:
@@ -43,10 +47,15 @@ class Playlist:
     def display(self):
         print(TAB + self.name)
         for song in self.songs:
-            print(TAB + TAB + str(song))
+            print(TAB + TAB, end='')
+            if song.get_name() == self.selected_song:
+                print(f"\033[1m{str(song)}\033[0m")
+            else:
+                print(str(song))
 
     def enter_command(self):
         while True:
+            self.display()
             print('\n' + TAB + "Please enter a command (type help for list of commands):")
             command = input(">> ").split(', ')
             if command[0] in self.commands:
@@ -64,12 +73,19 @@ class Playlist:
     def command_add(self, command):
         if len(command) == 4:
             self.add_song(Song(*command[1:]))
-            self.display()
         else:
             print("Error: Invalid add command")
 
     def command_select(self, command):
-        pass
+        if len(command) == 2:
+            song_name = command[1]
+            for song in self.songs:
+                if song.get_name() == song_name:
+                    self.selected_song = song_name
+                    return
+            print("Song not found in playlist")
+        else:
+            print("Error: Invalid select command")
 
     def __str__(self):
         return self.name
