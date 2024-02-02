@@ -177,9 +177,6 @@ class Spotify:
         else:
             print("Error: Invalid new command")
             
-
-
-
     def main_loop(self):
         # while True:
         self.enter_command()
@@ -187,20 +184,12 @@ class Spotify:
 
 
 def main():
-    # while True:
-    #     playlist_name = input("Select a playlist:\n")
     app = Spotify()
-    # print(TAB + "Select a playlist:")
-    # app.display_all_playlists()
-    # app.select_playlist()
-    # app.selected_playlist.enter_command()
     app.main_loop()
 
     '''
-    1) Select playlist + view
-    2) add song or select song
-    3) view 
-    4) can remove
+    1) Select + view, add, or remove playlist in app
+    2) add song or remove song in playlist
     '''
 
 main()
