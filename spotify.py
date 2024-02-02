@@ -13,7 +13,8 @@ class Song:
         return self.name
 
     def __str__(self):
-        return f"'{self.name}'[{self.length // 60}:{self.length % 60 :.2f}] by {self.artist}"
+        #! Need rjust or something on seconds
+        return f"'{self.name}'[{self.length // 60}:{self.length % 60}] by {self.artist}"
 
 
 
@@ -46,7 +47,7 @@ class Playlist:
     def display(self):
         print('\n' + TAB + self.name)
         if len(self.songs) == 0:
-            print("Playlist is empty! :(")
+            print(TAB + TAB +"Playlist is empty! :(")
             return
         for song in self.songs:
             print(TAB + TAB + str(song))
@@ -121,6 +122,7 @@ class Spotify:
         return playlists
     
     def display_all_playlists(self):
+        print('\n' + TAB + "Select a playlist:")
         for playlist in self.all_playlists:
             print(TAB + TAB + str(playlist))
 
@@ -131,6 +133,7 @@ class Spotify:
             command = input(">> ").split(', ')
             if command[0] in self.commands:
                 self.commands[command[0]](command)
+            #! Not working
             elif command[0] == "quit":
                 return
             else:
@@ -158,7 +161,7 @@ class Spotify:
             playlist_name = command[1]
             for playlist in self.all_playlists:
                 if playlist.get_name() == playlist_name:
-                    self.all_playlists.remove(playlist_name)
+                    self.all_playlists.remove(playlist)
                     return
             print("Error: Playlist not found in app")
         else:
